@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>{{ item.name }} - 我的杂物小店</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-color: #3498db; --text-color: #333; --bg-color: #f4f7f6; --card-bg-color: #ffffff; --border-color: #e0e0e0; --font-heading: 'Raleway', sans-serif; --font-body: 'Open Sans', sans-serif; }
+        body { font-family: var(--font-body); margin: 0; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .item-detail-container { display: flex; flex-wrap: wrap; gap: 2rem; background: #fff; padding: 2rem; border-radius: 8px; }
+        .item-image { flex: 1; min-width: 300px; }
+        .item-image img { width: 100%; border-radius: 8px; }
+        .item-info { flex: 1; min-width: 300px; }
+        .item-card-price { color: var(--primary-color); font-size: 1.5rem; font-weight: bold; }
+        .reserve-form { margin-top: 1.5rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="date"] { width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 4px; box-sizing: border-box; font-size: 1rem; }
+        .btn { padding: 12px; width: 100%; background-color: #3498db; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+        .out-of-stock { color: #e74c3c; }
+        .success { color: #155724; } .error { color: #721c24; }
+        a { color: var(--primary-color); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <main>
+            <div class="item-detail-container">
+                <div class="item-image">
+                    {% if item.image %}
+                        {% if 'http' in item.image %} <img src="{{ item.image }}" alt="{{ item.name }}">
+                        {% else %} <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.name }}">
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="item-info">
+                    <h1>{{ item.name }}</h1>
+                    <p class="item-card-price">${{ item.price }}</p>
+                    <p><strong>分类:</strong> {{ item.category }}</p>
+                    <p><strong>剩余数量:</strong> {{ item.quantity }}</p>
+                    <p>{{ item.description }}</p>
+
+                    <div class="reserve-form">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                          {% if messages %}
+                            {% for category, message in messages %} <p class="{{ category }}">{{ message }}</p> {% endfor %}
+                          {% endif %}
+                        {% endwith %}
+
+                        {% if item.quantity > 0 %}
+                            <h3>申请预留</h3>
+                            <form method="POST" action="{{ url_for('reserve', item_id=item.id) }}">
+                                <div class="form-group">
+                                    <label for="user_name">您的姓名</label>
+                                    <input type="text" id="user_name" name="user_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pickup_date">取货日期</label>
+                                    <input type="date" id="pickup_date" name="pickup_date" required>
+                                </div>
+                                <button type="submit" class="btn">确认预留</button>
+                            </form>
+                        {% else %}
+                            <h3 class="out-of-stock">此商品已售罄</h3>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <p style="text-align:center; margin-top:20px;"><a href="/">返回商品列表</a></p>
+        </main>
+    </div>
+</body>
+</html>
