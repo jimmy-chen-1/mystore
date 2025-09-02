@@ -1,26 +1,3 @@
 [
-    {
-        "id": 2,
-        "name": "一套编程书籍",
-        "description": "大概八成新，包含 Python、Java 和 C++，适合初学者。",
-        "price": "120.00",
-        "category": "书籍",
-        "image": "https://images.unsplash.com/photo-1544716278-e513176f20b5?q=80&w=400"
-    },
-    {
-        "name": "test item",
-        "description": "this is for test",
-        "price": "23.01",
-        "category": "床垫",
-        "image": "uploads/2025-08-24_220506.png",
-        "id": 3
-    },
-    {
-        "id": 4,
-        "name": "Gin",
-        "description": "酒",
-        "price": "34",
-        "category": "酒",
-        "image": "uploads/2025-08-25_181221.png"
-    }
+
 ]
