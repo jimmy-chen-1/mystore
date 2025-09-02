@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "name": "一个旧的桌面风扇",
+        "description": "夏天用过，风力强劲，有点灰尘但功能完好。",
+        "price": "50.00",
+        "category": "电器",
+        "image": "https://images.unsplash.com/photo-1593697821252-0c91d87d4642?q=80&w=400",
+        "quantity": 1
+    },
+    {
+        "id": 2,
+        "name": "一套编程书籍",
+        "description": "大概八成新，包含 Python、Java 和 C++，适合初学者。",
+        "price": "120.00",
+        "category": "书籍",
+        "image": "https://images.unsplash.com/photo-1544716278-e513176f20b5?q=80&w=400",
+        "quantity": 2
+    }
+]
