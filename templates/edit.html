@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑商品</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f7f6; line-height: 1.6; margin: 20px; }
+        .container { max-width: 600px; margin: 20px auto; padding: 2rem; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #3498db; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="number"], textarea, select { width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 4px; box-sizing: border-box; font-family: sans-serif; font-size: 1rem; }
+        .btn { padding: 12px; width: 100%; background-color: #2ecc71; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+        img { max-width: 100px; margin-top: 10px; display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>编辑商品: {{ item.name }}</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">物品名称</label>
+                <input type="text" id="name" name="name" value="{{ item.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="description">描述</label>
+                <textarea id="description" name="description" required>{{ item.description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">价格 ($)</label>
+                <input type="number" id="price" name="price" step="0.01" value="{{ item.price }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="category">分类</label>
+                <select id="category" name="category" required>
+                    {% for cat in categories %}
+                    <option value="{{ cat }}" {% if cat == item.category %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="image">更换照片 (如果不想更换请留空)</label>
+                <p>当前图片:</p>
+                {% if item.image %}
+                    {% if 'http' in item.image %}
+                        <img src="{{ item.image }}" alt="Current Image">
+                    {% else %}
+                        <img src="{{ url_for('static', filename=item.image) }}" alt="Current Image">
+                    {% endif %}
+                {% else %}
+                    <p>无</p>
+                {% endif %}
+                <input type="file" id="image" name="image" accept="image/*">
+            </div>
+            <button type="submit" class="btn">保存更改</button>
+        </form>
+        <p style="text-align:center; margin-top:20px;"><a href="{{ url_for('admin') }}">返回管理列表</a></p>
+    </div>
+</body>
+</html>
