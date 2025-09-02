@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者页面</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f7f6; line-height: 1.6; margin: 20px; }
+        .container { max-width: 960px; margin: 20px auto; padding: 2rem; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+        h1, h2 { color: #3498db; }
+        h2 { border-top: 1px solid #eee; padding-top: 2rem; margin-top: 2rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="number"], textarea, select { width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 4px; box-sizing: border-box; font-size: 1rem; }
+        .btn { padding: 8px 12px; color: white; border: none; border-radius: 4px; font-size: 0.9rem; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-submit { width: 100%; padding: 12px; background-color: #3498db; }
+        .btn-submit:hover { background-color: #2980b9; }
+        .btn-edit { background-color: #2ecc71; }
+        .btn-delete { background-color: #e74c3c; }
+        .btn-export { background-color: #95a5a6; }
+        .btn-export:hover { background-color: #7f8c8d; }
+        .flash-message { text-align: center; padding: 1rem; margin-bottom: 1rem; border-radius: 4px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .table-container { overflow-x: auto; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; white-space: nowrap; }
+        .data-table th { background-color: #f8f8f8; }
+        .item-actions { display: flex; gap: 10px; }
+        .nav-tabs { border-bottom: 2px solid #ddd; padding-bottom: -1px; margin-bottom: 1.5rem; display: flex; }
+        .nav-tab { padding: 10px 20px; text-decoration: none; color: #555; border: 1px solid transparent; border-bottom: none; margin-bottom: -2px; border-radius: 5px 5px 0 0;}
+        .nav-tab.active { color: #3498db; border: 2px solid #ddd; border-bottom: 2px solid #fff; font-weight: bold; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .filter-form { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; background: #f8f8f8; padding: 1rem; border-radius: 5px; }
+        .export-buttons { display: flex; gap: 1rem; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header"><h1>管理后台</h1><a href="{{ url_for('logout') }}" class="btn btn-delete">登出</a></div>
+        {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}
+            {% for category, message in messages %}<div class="flash-message {{ category }}">{{ message }}</div>{% endfor %}
+        {% endif %}{% endwith %}
+
+        <div class="nav-tabs">
+            <a href="?view=products" class="nav-tab {% if view == 'products' %}active{% endif %}">商品管理</a>
+            <a href="?view=reservations" class="nav-tab {% if view == 'reservations' %}active{% endif %}">订单管理</a>
+        </div>
+
+        <div id="products" class="tab-content {% if view == 'products' %}active{% endif %}">
+            <section id="add-item">
+                <h2>添加新商品</h2>
+                <form method="POST" action="{{ url_for('admin') }}" enctype="multipart/form-data">
+                    <div class="form-group"><label>物品名称</label><input type="text" name="name" required></div>
+                    <div class="form-group"><label>描述</label><textarea name="description" required></textarea></div>
+                    <div class="form-group"><label>价格 ($)</label><input type="number" name="price" step="0.01" required></div>
+                    <div class="form-group"><label>数量</label><input type="number" name="quantity" min="0" value="1" required></div>
+                    <div class="form-group"><label>分类</label><select name="category" required>{% for cat in categories %}<option value="{{ cat }}">{{ cat }}</option>{% endfor %}</select></div>
+                    <div class="form-group"><label>上传照片</label><input type="file" name="image" accept="image/*"></div>
+                    <button type="submit" class="btn btn-submit">提交新商品</button>
+                </form>
+            </section>
+            <section id="manage-items">
+                <h2>管理现有商品</h2>
+                <form class="filter-form" method="GET"><input type="hidden" name="view" value="products">
+                    <input type="text" name="q_prod" placeholder="按商品名称搜索..." value="{{ product_query or '' }}">
+                    <button type="submit" class="btn btn-submit" style="width: auto;">搜索</button>
+                </form>
+                <div class="table-container"><table class="data-table">
+                    <thead><tr><th>ID</th><th>名称</th><th>价格</th><th>数量</th><th>分类</th><th>操作</th></tr></thead>
+                    <tbody>
+                        {% for item in items %}<tr><td>{{ item.id }}</td><td>{{ item.name }}</td><td>${{ item.price }}</td><td>{{ item.quantity }}</td><td>{{ item.category }}</td>
+                            <td><div class="item-actions"><a href="{{ url_for('edit_item', item_id=item.id) }}" class="btn btn-edit">编辑</a><form method="POST" action="{{ url_for('delete_item', item_id=item.id) }}" onsubmit="return confirm('您确定要删除这个商品吗？');"><button type="submit" class="btn btn-delete">删除</button></form></div></td>
+                        </tr>{% else %}<tr><td colspan="6" style="text-align:center;">没有找到商品。</td></tr>{% endfor %}
+                    </tbody>
+                </table></div>
+            </section>
+        </div>
+
+        <div id="reservations" class="tab-content {% if view == 'reservations' %}active{% endif %}">
+            <section id="manage-reservations">
+                <h2>管理预留订单</h2>
+                <form class="filter-form" method="GET"><input type="hidden" name="view" value="reservations">
+                    <input type="text" name="q_res" placeholder="按预留人姓名搜索..." value="{{ reservation_query or '' }}">
+                    <select name="f_res_status"><option value="">所有状态</option>
+                        <option value="待处理" {% if reservation_status == '待处理' %}selected{% endif %}>待处理</option>
+                        <option value="已联系" {% if reservation_status == '已联系' %}selected{% endif %}>已联系</option>
+                        <option value="已完成" {% if reservation_status == '已完成' %}selected{% endif %}>已完成</option>
+                    </select>
+                    <button type="submit" class="btn btn-submit" style="width: auto;">筛选/搜索</button>
+                </form>
+                <div class="table-container"><table class="data-table">
+                    <thead><tr><th>ID</th><th>商品</th><th>预留人</th><th>取货日期</th><th>预留时间</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody>
+                        {% for res in reservations|reverse %}<tr><td>{{ res.id }}</td><td>{{ res.item_name }}</td><td>{{ res.user_name }}</td><td>{{ res.pickup_date }}</td><td>{{ res.timestamp }}</td>
+                            <td><form method="POST" action="{{ url_for('edit_reservation_status', res_id=res.id) }}"><input type="hidden" name="view" value="reservations"><select name="status" class="status-select" onchange="this.form.submit()">
+                                <option value="待处理" {% if res.status == '待处理' %}selected{% endif %}>待处理</option>
+                                <option value="已联系" {% if res.status == '已联系' %}selected{% endif %}>已联系</option>
+                                <option value="已完成" {% if res.status == '已完成' %}selected{% endif %}>已完成</option>
+                            </select></form></td>
+                            <td><form method="POST" action="{{ url_for('delete_reservation', res_id=res.id) }}" onsubmit="return confirm('确定删除此订单吗？');"><button type="submit" class="btn btn-delete">删除</button></form></td>
+                        </tr>{% else %}<tr><td colspan="7" style="text-align:center;">没有找到订单。</td></tr>{% endfor %}
+                    </tbody>
+                </table></div>
+            </section>
+        </div>
+
+        <section id="data-export">
+            <h2>数据导出</h2>
+            <div class="export-buttons">
+                <a href="{{ url_for('export_products') }}" class="btn btn-export">导出商品数据 (CSV)</a>
+                <a href="{{ url_for('export_reservations') }}" class="btn btn-export">导出预留订单 (CSV)</a>
+            </div>
+        </section>
+
+        <p style="text-align:center; margin-top:20px;"><a href="/">返回主页查看</a></p>
+    </div>
+</body>
+</html>
