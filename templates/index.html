@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二手闲置物品交易平台</title>
+    <title>NJ小仓</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -74,7 +74,7 @@
 
         /* --- Hero Section --- */
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/static/images/hero-bg.jpg') no-repeat center center/cover; /* 确保您有一个 /static/images/hero-bg.jpg */
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2070") no-repeat center center/cover;
             color: #fff;
             text-align: center;
             padding: 80px 0;
@@ -132,12 +132,24 @@
         .search-form button:hover {
             background-color: #2980b9;
         }
-
+        
+        /* **** 这是修改的地方 **** */
         .category-filter {
             display: flex;
-            flex-wrap: wrap; /* 允许在小屏幕上换行 */
-            gap: 8px;
+            gap: 10px;
+            overflow-x: auto;   /* 允许内容在横向上滚动 */
+            flex-wrap: nowrap;    /* 强制所有子元素不换行，保持在同一行 */
+            padding-bottom: 15px; /* 在底部增加一点空间，防止滚动条与下方内容太近 */
+            
+            /* --- 以下是可选的美化，用于隐藏滚动条，但依然可以滚动 --- */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
+        
+        .category-filter::-webkit-scrollbar {
+            display: none; /* 隐藏 Chrome, Safari 和 Opera 的滚动条 */
+        }
+        /* *********************** */
 
         .category-filter a {
             background-color: var(--background-color);
@@ -181,7 +193,7 @@
             color: var(--text-color);
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             border: 1px solid var(--border-color);
         }
 
@@ -219,11 +231,6 @@
             color: var(--light-text-color);
             margin-bottom: 10px;
             flex-grow: 1; /* 描述占据更多空间 */
-            display: -webkit-box;
-            -webkit-line-clamp: 2; /* 最多显示2行描述 */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .item-info .price {
@@ -270,9 +277,6 @@
             .hero p {
                 font-size: 1rem;
             }
-            .item-grid {
-                grid-template-columns: 1fr; /* 手机上单列显示 */
-            }
             .header .container {
                 flex-direction: column;
                 gap: 10px;
@@ -282,12 +286,6 @@
             }
             .search-form {
                 flex-direction: column;
-            }
-            .search-form button {
-                width: 100%;
-            }
-            .category-filter {
-                justify-content: center; /* 分类按钮居中 */
             }
         }
 
@@ -300,15 +298,6 @@
             }
             .hero h1 {
                 font-size: 1.8rem;
-            }
-            .item-card img {
-                height: 180px;
-            }
-            .item-info h3 {
-                font-size: 1.2rem;
-            }
-            .item-info .price {
-                font-size: 1.4rem;
             }
         }
     </style>
@@ -338,15 +327,17 @@
     <main class="container">
         <section class="search-filter-section">
             <form class="search-form" action="{{ url_for('home') }}" method="get">
-                <input type="text" name="q" placeholder="搜索商品名称或描述..." value="{{ query or '' }}">
+                <input type="text" name="q" placeholder="搜索商品名称..." value="{{ query or '' }}">
                 <button type="submit">搜索</button>
             </form>
             <div class="category-filter">
+                <a href="{{ url_for('home', q=query) }}" class="{% if not current_category %}active{% endif %}">所有分类</a>
                 {% for cat in categories %}
-                    <a href="{{ url_for('home', category='' if cat == '所有分类' else cat, q=query) }}" 
-                       class="{% if (cat == '所有分类' and not current_category) or (cat == current_category) %}active{% endif %}">
-                        {{ cat }}
-                    </a>
+                    {% if cat != '所有分类' %}
+                        <a href="{{ url_for('home', category=cat, q=query) }}" class="{% if cat == current_category %}active{% endif %}">
+                            {{ cat }}
+                        </a>
+                    {% endif %}
                 {% endfor %}
             </div>
         </section>
@@ -356,7 +347,7 @@
                 <div class="item-grid">
                     {% for item in items %}
                         <a href="{{ url_for('item_detail', item_id=item.id) }}" class="item-card">
-                            <img src="{{ url_for('static', filename=item.image) if item.image else url_for('static', filename='images/placeholder.jpg') }}" alt="{{ item.name }}">
+                            <img src="{{ url_for('static', filename=item.image) if item.image else 'https://via.placeholder.com/300x200.png?text=No+Image' }}" alt="{{ item.name }}">
                             <div class="item-info">
                                 <h3>{{ item.name }}</h3>
                                 <p>{{ item.description }}</p>
@@ -375,10 +366,11 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; {{ '%Y' | strftime(now=True) }} 旧物新用平台. All rights reserved.</p>
+            <p>&copy; 2025 旧物新用平台. All rights reserved.</p>
             <p>地址: {{ contact.address }} | 电话: {{ contact.phone }}</p>
             <p><a href="{{ url_for('admin') }}">管理员入口</a></p>
         </div>
     </footer>
 </body>
 </html>
+
