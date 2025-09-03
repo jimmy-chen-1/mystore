@@ -3,111 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的杂物小店</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <title>二手闲置物品交易平台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #3498db; --text-color: #333; --bg-color: #f4f7f6;
-            --card-bg-color: #ffffff; --border-color: #e0e0e0;
-            --font-heading: 'Raleway', sans-serif; --font-body: 'Open Sans', sans-serif;
+            --primary-color: #3498db; /* 主题蓝 */
+            --secondary-color: #2ecc71; /* 强调绿 */
+            --text-color: #333;
+            --light-text-color: #666;
+            --background-color: #f8f9fa;
+            --card-bg: #fff;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 15px rgba(0,0,0,0.08);
+            --header-height: 60px;
         }
-        body { font-family: var(--font-body); margin: 0; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .store-header { text-align: center; padding: 2rem 0; border-bottom: 1px solid var(--border-color); margin-bottom: 2rem; }
-        .store-header h1 { font-family: var(--font-heading); font-size: 2.5rem; margin: 0; color: var(--primary-color); }
-        .contact-info { background-color: var(--card-bg-color); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; text-align: center; border: 1px solid var(--border-color); }
-        .navbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background-color: var(--card-bg-color); padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 2rem; }
-        .nav-links a { margin-right: 1.5rem; text-decoration: none; color: var(--primary-color); font-weight: 600; padding-bottom: 5px; border-bottom: 2px solid transparent; transition: border-color 0.3s; }
-        .nav-links a.active, .nav-links a:hover { border-bottom-color: var(--primary-color); }
-        .search-form { display: flex; }
-        .search-form input { border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 4px 0 0 4px; border-right: none; }
-        .search-form button { background-color: var(--primary-color); color: white; border: none; padding: 0.6rem 1rem; border-radius: 0 4px 4px 0; cursor: pointer; }
-        .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-        .item-card { display: block; text-decoration: none; color: inherit; background-color: var(--card-bg-color); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s; border: 1px solid var(--border-color); position: relative; }
-        .item-card:hover { transform: translateY(-5px); }
-        .item-card img { width: 100%; height: 220px; object-fit: cover; }
-        .item-card-content { padding: 1rem; }
-        .item-card h3 { font-family: var(--font-heading); margin-top: 0; font-size: 1.25rem; }
-        .item-card-price { color: var(--primary-color); font-size: 1.2rem; font-weight: bold; }
-        .stock-status { font-weight: bold; }
-        .in-stock { color: #2ecc71; }
-        .out-of-stock { color: #e74c3c; }
-        .site-footer { text-align: center; padding: 2rem 0; margin-top: 2rem; border-top: 1px solid var(--border-color); color: #777; }
-        .admin-link a { color: #555; text-decoration: none; font-weight: 600; }
-        .admin-link a:hover { color: var(--primary-color); }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* --- Header --- */
+        .header {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 400;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/static/images/hero-bg.jpg') no-repeat center center/cover; /* 确保您有一个 /static/images/hero-bg.jpg */
+            color: #fff;
+            text-align: center;
+            padding: 80px 0;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+            opacity: 0.9;
+        }
+
+        /* --- Search & Filter --- */
+        .search-filter-section {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-form input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .search-form button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-form button:hover {
+            background-color: #2980b9;
+        }
+
+        .category-filter {
+            display: flex;
+            flex-wrap: wrap; /* 允许在小屏幕上换行 */
+            gap: 8px;
+        }
+
+        .category-filter a {
+            background-color: var(--background-color);
+            color: var(--light-text-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            white-space: nowrap; /* 防止分类名称在按钮内换行 */
+        }
+
+        .category-filter a:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .category-filter a.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* --- Item Grid --- */
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 响应式网格 */
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .item-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .item-card img {
+            width: 100%;
+            height: 200px; /* 固定图片高度 */
+            object-fit: cover; /* 裁剪图片以填充 */
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .item-info {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* 让信息区域占据剩余空间 */
+        }
+
+        .item-info h3 {
+            font-size: 1.4rem;
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* 名称过长时显示省略号 */
+        }
+
+        .item-info p {
+            font-size: 0.95rem;
+            color: var(--light-text-color);
+            margin-bottom: 10px;
+            flex-grow: 1; /* 描述占据更多空间 */
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* 最多显示2行描述 */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-info .price {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-top: auto; /* 价格始终在底部 */
+        }
+        
+        .no-items-message {
+            text-align: center;
+            padding: 50px 0;
+            font-size: 1.2rem;
+            color: var(--light-text-color);
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: var(--text-color);
+            color: #fff;
+            padding: 30px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .item-grid {
+                grid-template-columns: 1fr; /* 手机上单列显示 */
+            }
+            .header .container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .nav-links a {
+                margin: 0 10px;
+            }
+            .search-form {
+                flex-direction: column;
+            }
+            .search-form button {
+                width: 100%;
+            }
+            .category-filter {
+                justify-content: center; /* 分类按钮居中 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo a {
+                font-size: 1.5rem;
+            }
+            .hero {
+                padding: 60px 0;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .item-card img {
+                height: 180px;
+            }
+            .item-info h3 {
+                font-size: 1.2rem;
+            }
+            .item-info .price {
+                font-size: 1.4rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header class="store-header"><h1>我的杂物小店</h1></header>
-        <section class="contact-info">
-            <h3>取货信息</h3>
-            <p><strong>地址：</strong>{{ contact.address }}</p>
-            <p><strong>电话：</strong>{{ contact.phone }}</p>
-        </section>
-        <nav class="navbar">
-            <div class="nav-links">
-                <a href="/" class="{% if not current_category %}active{% endif %}">所有商品</a>
-                {% for category in categories %}
-                    <a href="/?category={{ category }}" class="{% if current_category == category %}active{% endif %}">{{ category }}</a>
-                {% endfor %}
-            </div>
-            <form class="search-form" action="/" method="get">
-                <input type="text" name="q" placeholder="搜索商品..." value="{{ query }}">
-                <button type="submit">搜索</button>
-            </form>
-        </nav>
-        <main>
-            <h2 class="page-title">
-                {% if current_category %}
-                    分类: {{ current_category }}
-                {% elif query %}
-                    "{{ query }}" 的搜索结果
-                {% else %}
-                    最新商品
-                {% endif %}
-            </h2>
-            <div class="item-grid">
-                {% for item in items %}
-                <a href="{{ url_for('item_detail', item_id=item.id) }}" class="item-card">
-                    {% if item.image %}
-                        {% if 'http' in item.image %}
-                            <img src="{{ item.image }}" alt="{{ item.name }}">
-                        {% else %}
-                            <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.name }}">
-                        {% endif %}
-                    {% endif %}
-                    <div class="item-card-content">
-                        <h3>{{ item.name }}</h3>
-                        <p class="item-card-price">${{ item.price }}</p>
-                        <p class="stock-status {% if item.quantity > 0 %}in-stock{% else %}out-of-stock{% endif %}">
-                            {% if item.quantity > 0 %}
-                                仅剩 {{ item.quantity }} 件
-                            {% else %}
-                                已售罄
-                            {% endif %}
-                        </p>
-                    </div>
-                </a>
-                {% else %}
-                <div style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: #777;">
-                    <p>没有找到匹配的商品...</p>
-                </div>
-                {% endfor %}
-            </div>
-        </main>
-        <footer class="site-footer">
-            <div class="admin-link">
+    <header class="header">
+        <div class="container">
+            <div class="logo"><a href="{{ url_for('home') }}">旧物新用</a></div>
+            <nav class="nav-links">
                 {% if logged_in %}
-                    <a href="{{ url_for('admin') }}">进入管理后台</a> &nbsp;|&nbsp;
+                    <a href="{{ url_for('admin') }}">管理后台</a>
                     <a href="{{ url_for('logout') }}">登出</a>
                 {% else %}
                     <a href="{{ url_for('login') }}">管理员登录</a>
                 {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>寻找心仪的闲置好物</h1>
+            <p>在这里，让您的闲置物品找到新的归宿，环保又实惠。</p>
+        </div>
+    </section>
+
+    <main class="container">
+        <section class="search-filter-section">
+            <form class="search-form" action="{{ url_for('home') }}" method="get">
+                <input type="text" name="q" placeholder="搜索商品名称或描述..." value="{{ query or '' }}">
+                <button type="submit">搜索</button>
+            </form>
+            <div class="category-filter">
+                {% for cat in categories %}
+                    <a href="{{ url_for('home', category='' if cat == '所有分类' else cat, q=query) }}" 
+                       class="{% if (cat == '所有分类' and not current_category) or (cat == current_category) %}active{% endif %}">
+                        {{ cat }}
+                    </a>
+                {% endfor %}
             </div>
-        </footer>
-    </div>
+        </section>
+
+        <section class="item-list">
+            {% if items %}
+                <div class="item-grid">
+                    {% for item in items %}
+                        <a href="{{ url_for('item_detail', item_id=item.id) }}" class="item-card">
+                            <img src="{{ url_for('static', filename=item.image) if item.image else url_for('static', filename='images/placeholder.jpg') }}" alt="{{ item.name }}">
+                            <div class="item-info">
+                                <h3>{{ item.name }}</h3>
+                                <p>{{ item.description }}</p>
+                                <span class="price">${{ '%.2f' | format(item.price) }}</span>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-items-message">
+                    <p>暂无符合条件的商品，请尝试其他搜索或分类。</p>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ '%Y' | strftime(now=True) }} 旧物新用平台. All rights reserved.</p>
+            <p>地址: {{ contact.address }} | 电话: {{ contact.phone }}</p>
+            <p><a href="{{ url_for('admin') }}">管理员入口</a></p>
+        </div>
+    </footer>
 </body>
 </html>
