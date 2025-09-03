@@ -22,14 +22,13 @@ UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # --- 数据库配置 ---
-# Heroku 会提供 DATABASE_URL 环境变量，本地则使用 sqlite
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# 初始化数据库和迁移工具
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+# 固定分类，这里是唯一的改动点，用于页面显示
 FIXED_CATEGORIES = ["家具", "办公用品", "碗筷杯子", "电器", "娱乐", "户外", "其他"]
 
 # --- 数据库模型 (代替 JSON 结构) ---
@@ -65,7 +64,17 @@ def home():
         
     displayed_items = items_query.all()
     contact_info = {'address': '新泽西州南布伦瑞克市 xxx 路 123 号', 'phone': '908-123-4567'}
-    return render_template('index.html', items=displayed_items, contact=contact_info, categories=FIXED_CATEGORIES, query=query, current_category=category_filter, logged_in=session.get('logged_in', False))
+    
+    # 唯一改动：将所有的分类传递给模板，包括一个“所有分类”的选项
+    all_categories = ['所有分类'] + FIXED_CATEGORIES 
+    
+    return render_template('index.html', 
+                           items=displayed_items, 
+                           contact=contact_info, 
+                           categories=all_categories, # 注意这里
+                           query=query, 
+                           current_category=category_filter, 
+                           logged_in=session.get('logged_in', False))
 
 @app.route('/item/<int:item_id>')
 def item_detail(item_id):
@@ -179,7 +188,6 @@ def edit_reservation_status(res_id):
 # 数据导出路由 (现在从数据库导出)
 @app.route('/export/products')
 def export_products():
-    # ... (此处省略与上一版相同的代码，但数据源变为数据库)
     if not session.get('logged_in'): return redirect(url_for('login'))
     items = Item.query.all(); output = io.StringIO(); writer = csv.writer(output)
     writer.writerow(['ID', '名称', '描述', '价格', '数量', '分类', '图片路径'])
@@ -189,7 +197,6 @@ def export_products():
 
 @app.route('/export/reservations')
 def export_reservations():
-    # ... (此处省略与上一版相同的代码，但数据源变为数据库)
     if not session.get('logged_in'): return redirect(url_for('login'))
     reservations = Reservation.query.all(); output = io.StringIO(); writer = csv.writer(output)
     writer.writerow(['订单ID', '商品ID', '商品名称', '预留人姓名', '取货日期', '预留时间', '状态'])
@@ -197,4 +204,7 @@ def export_reservations():
     output.seek(0)
     return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=reservations_export.csv"})
 
-# (启动应用的 if __name__ == '__main__': 部分可以删除，因为 gunicorn 会处理)
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all() # 在本地运行时创建数据库表（如果不存在）
+    app.run(debug=True)
