@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二手闲置物品交易平台</title>
+    <title>NJ小仓</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
@@ -140,7 +140,7 @@
 <body>
     <header class="header">
         <div class="container header-content">
-            <a href="{{ url_for('home') }}" class="logo">闲置小铺</a>
+            <a href="{{ url_for('home') }}" class="logo">NJ小仓</a>
             <div class="admin-link">
                 {% if logged_in %}
                     <a href="{{ url_for('admin') }}">管理后台</a>
@@ -214,9 +214,10 @@
     </div>
 
     <footer class="footer">
-        <p>&copy; 2025 闲置小铺. All rights reserved.</p>
+        <p>&copy; 2025 NJ小仓. All rights reserved.</p>
         <p>{{ contact.address }} | {{ contact.phone }}</p>
     </footer>
 </body>
 </html>
+
 
