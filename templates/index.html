@@ -3,37 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NJ小仓</title>
+    <title>二手闲置物品交易平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* =================================================================== */
         /* ==                【 样式控制面板 】                           == */
-        /* ==  在这里修改颜色和字体，整个网站的风格会立刻改变！         == */
         /* =================================================================== */
         :root {
-            --color-primary: #d37b4e; /* 主题色 (温暖的赤陶色) */
-            --color-primary-light: #eac5b3;
-            --color-text: #3a3a3a;      /* 主要文字颜色 (深灰色) */
-            --color-text-light: #7f7f7f;
-            --color-background: #fdfaf6; /* 背景色 (柔和米色) */
-            --color-surface: #ffffff;  /* 卡片等元素的背景色 (白色) */
-            --color-border: #f0ebe5;
-            --font-main: 'Inter', sans-serif;
-            --shadow-soft: 0 4px 12px rgba(0,0,0,0.06);
-            --border-radius: 12px;
+            --color-primary: #007bff; /* 主题色 (活力蓝) */
+            --color-primary-dark: #0056b3;
+            --color-secondary: #28a745; /* 强调色 (绿色) */
+            --color-text: #212529;      /* 主要文字颜色 */
+            --color-text-light: #6c757d;
+            --color-background: #f8f9fa; /* 背景色 */
+            --color-surface: #ffffff;  /* 卡片等元素的背景色 */
+            --color-border: #dee2e6;
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --border-radius: 8px;
         }
         /* =================================================================== */
 
         *, *::before, *::after { box-sizing: border-box; }
 
         body {
-            font-family: var(--font-main);
+            font-family: var(--font-body);
             margin: 0;
             background-color: var(--color-background);
             color: var(--color-text);
-            line-height: 1.7;
+            line-height: 1.6;
         }
 
         .container {
@@ -45,93 +47,94 @@
         /* --- Header --- */
         .header {
             background-color: var(--color-surface);
-            padding: 20px 0;
+            padding: 15px 0;
             border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
         }
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-heading); font-size: 1.5rem; text-decoration: none; color: var(--color-primary); }
+        .admin-link a { text-decoration: none; color: var(--color-primary); font-weight: 500; }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: #e9ecef;
+            margin-bottom: 30px;
         }
-        .logo { font-size: 1.8rem; text-decoration: none; color: var(--color-text); font-weight: 700; }
-        .admin-link a { text-decoration: none; background-color: var(--color-primary); color: white; padding: 8px 16px; border-radius: var(--border-radius); font-size: 0.9rem; font-weight: 500; transition: background-color 0.2s; }
-        .admin-link a:hover { background-color: #c06a3d; }
+        .hero-section h1 { font-family: var(--font-heading); font-size: 2.5rem; margin: 0 0 10px 0; }
+        .hero-section p { font-size: 1.1rem; color: var(--color-text-light); max-width: 600px; margin: 0 auto; }
 
         /* --- Controls Section --- */
-        .controls-section { padding: 40px 0; }
-        .controls-container {
+        .controls-section {
             background-color: var(--color-surface);
-            padding: 25px;
+            padding: 20px;
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow-soft);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-sm);
         }
         .search-form { display: flex; gap: 10px; margin-bottom: 20px; }
         .search-form input {
-            flex-grow: 1;
-            padding: 12px 15px;
-            border: 1px solid var(--color-border);
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-family: var(--font-main);
+            flex-grow: 1; padding: 12px 15px; border: 1px solid var(--color-border);
+            border-radius: var(--border-radius); font-size: 1rem; font-family: var(--font-body);
         }
         .search-form button {
-            background-color: var(--color-primary);
-            color: white; padding: 12px 20px; border: none;
+            background-color: var(--color-primary); color: white; padding: 12px 20px; border: none;
             border-radius: var(--border-radius); cursor: pointer; font-size: 1rem;
             font-weight: 500; transition: background-color 0.2s;
         }
-        .search-form button:hover { background-color: #c06a3d; }
-
+        .search-form button:hover { background-color: var(--color-primary-dark); }
         .category-pills { display: flex; gap: 10px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 15px; scrollbar-width: none; -ms-overflow-style: none; }
         .category-pills::-webkit-scrollbar { display: none; }
         .category-pill {
-            background-color: var(--color-background);
-            color: var(--color-text-light);
-            padding: 8px 18px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            border: 1px solid var(--color-border);
-            white-space: nowrap;
-            transition: all 0.2s;
+            background-color: var(--color-background); color: var(--color-text-light); padding: 8px 18px;
+            border-radius: 20px; text-decoration: none; font-size: 0.9rem; font-weight: 500;
+            border: 1px solid var(--color-border); white-space: nowrap; transition: all 0.2s;
         }
-        .category-pill:hover { background-color: var(--color-primary-light); color: var(--color-primary); border-color: var(--color-primary-light); }
-        .category-pill.active { background-color: var(--color-primary); color: white; border-color: var(--color-primary); }
+        .category-pill:hover { background-color: #e2e6ea; border-color: #adb5bd; }
+        .category-pill.active { background-color: var(--color-primary); color: white; border-color: var(--color-primary); font-weight: 700; }
 
         /* --- Item Grid --- */
-        .content-section { padding-bottom: 40px; }
-        .grid-header { margin-bottom: 20px; }
-        .grid-header h2 { font-size: 1.8rem; margin: 0; }
+        .grid-header { margin-bottom: 20px; border-bottom: 1px solid var(--color-border); padding-bottom: 15px; }
+        .grid-header h2 { font-family: var(--font-heading); margin: 0; font-size: 1.5rem; }
         
         .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
         .item-card {
-            background-color: var(--color-surface);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-soft);
-            text-decoration: none;
-            color: var(--color-text);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s, box-shadow 0.2s;
+            background-color: var(--color-surface); border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm); text-decoration: none; color: var(--color-text);
+            display: flex; flex-direction: column; transition: box-shadow 0.2s ease;
             border: 1px solid var(--color-border);
         }
-        .item-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .item-card:hover { box-shadow: var(--shadow-md); }
         .item-card-image { width: 100%; height: 220px; object-fit: cover; border-top-left-radius: var(--border-radius); border-top-right-radius: var(--border-radius); }
         .item-card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .item-card-title { font-size: 1.3rem; font-weight: 700; margin: 0 0 8px 0; }
-        .item-card-description { font-size: 0.95rem; color: var(--color-text-light); margin: 0 0 15px 0; flex-grow: 1; }
-        .item-card-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; }
-        .item-card-price { font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
-        .item-card-stock { font-size: 0.9rem; font-weight: 500; }
-        .in-stock { color: #27ae60; }
-        .out-of-stock { color: #c0392b; }
+        .item-card-title { font-family: var(--font-heading); font-size: 1.25rem; margin: 0 0 8px 0; color: var(--color-primary); }
+        .item-card-description { font-size: 0.9rem; color: var(--color-text-light); margin: 0 0 15px 0; flex-grow: 1; }
+        .item-card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .item-card-price { font-size: 1.4rem; font-weight: 700; color: var(--color-text); }
+        .item-card-stock { font-size: 0.85rem; padding: 4px 8px; border-radius: 4px; font-weight: 500; }
+        .in-stock { background-color: #d4edda; color: #155724; }
+        .out-of-stock { background-color: #f8d7da; color: #721c24; }
         .no-items { text-align: center; padding: 40px; background: var(--color-surface); border-radius: var(--border-radius); }
+
+        /* --- Pagination --- */
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 40px; }
+        .pagination a, .pagination span { text-decoration: none; color: var(--color-text-light); padding: 8px 15px; border: 1px solid var(--color-border); border-radius: var(--border-radius); font-weight: 500; }
+        .pagination a:hover { background-color: #e9ecef; color: var(--color-primary); }
+        .pagination .current-page { background-color: var(--color-primary); color: white; border-color: var(--color-primary); }
 
         /* --- Footer --- */
         .footer { text-align: center; padding: 40px 20px; color: var(--color-text-light); font-size: 0.9rem; border-top: 1px solid var(--color-border); margin-top: 30px; }
         .footer a { color: var(--color-primary); }
         
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .hero-section h1 { font-size: 2rem; }
+            .header-content { flex-direction: column; gap: 10px; }
+        }
     </style>
 </head>
 <body>
@@ -148,36 +151,37 @@
         </div>
     </header>
 
+    <section class="hero-section">
+        <h1>发现好物，延续价值</h1>
+        <p>一个简单可靠的二手闲置物品交易平台。</p>
+    </section>
+
     <div class="container">
         <section class="controls-section">
-            <div class="controls-container">
-                <form class="search-form" action="{{ url_for('home') }}" method="get">
-                    <input type="text" name="q" placeholder="例如: 书籍, 风扇..." value="{{ query or '' }}">
-                    <button type="submit">搜索</button>
-                </form>
-                <div class="category-pills">
-                    <a href="{{ url_for('home', q=query) }}" class="category-pill {% if not current_category %}active{% endif %}">所有分类</a>
-                    {% for cat in categories %}
-                        {% if cat != '所有分类' %}
-                            <a href="{{ url_for('home', category=cat, q=query) }}" class="category-pill {% if cat == current_category %}active{% endif %}">{{ cat }}</a>
-                        {% endif %}
-                    {% endfor %}
-                </div>
+            <form class="search-form" action="{{ url_for('home') }}" method="get">
+                <input type="text" name="q" placeholder="搜索您感兴趣的物品..." value="{{ query or '' }}">
+                <button type="submit">搜索</button>
+            </form>
+            <div class="category-pills">
+                <a href="{{ url_for('home', q=query) }}" class="category-pill {% if not current_category %}active{% endif %}">所有分类</a>
+                {% for cat in categories %}{% if cat != '所有分类' %}<a href="{{ url_for('home', category=cat, q=query) }}" class="category-pill {% if cat == current_category %}active{% endif %}">{{ cat }}</a>{% endif %}{% endfor %}
             </div>
         </section>
 
         <main class="content-section">
             <div class="grid-header">
-                <h2>
-                    {% if current_category %}{{ current_category }}{% elif query %}"{{ query }}" 的搜索结果{% else %}最新商品{% endif %}
-                </h2>
+                <h2>{% if current_category %}{{ current_category }}{% elif query %}"{{ query }}" 的搜索结果{% else %}最新商品{% endif %}</h2>
             </div>
 
             {% if items %}
                 <div class="item-grid">
                     {% for item in items %}
-                        <a href="{{ url_for('item_detail', item_id=item.id) }}" class="item-card">
-                            <img class="item-card-image" src="{{ url_for('static', filename=item.image) if item.image else 'https://via.placeholder.com/400x300.png?text=No+Image' }}" alt="{{ item.name }}">
+                        <a href="{{ url_for('item_detail', item_id=item._id) }}" class="item-card">
+                            {% if item.image and 'cloudinary' in item.image %}
+                                <img class="item-card-image" src="{{ item.image }}" alt="{{ item.name }}">
+                            {% else %}
+                                <img class="item-card-image" src="https://via.placeholder.com/400x300.png?text=No+Image" alt="No image available">
+                            {% endif %}
                             <div class="item-card-content">
                                 <h3 class="item-card-title">{{ item.name }}</h3>
                                 <p class="item-card-description">{{ item.description }}</p>
@@ -191,6 +195,18 @@
                         </a>
                     {% endfor %}
                 </div>
+                
+                {% if total_pages > 1 %}
+                <div class="pagination">
+                    {% if page > 1 %}
+                        <a href="{{ url_for('home', page=page-1, q=query, category=current_category) }}">&laquo; 上一页</a>
+                    {% endif %}
+                    <span class="current-page">第 {{ page }} 页 / 共 {{ total_pages }} 页</span>
+                    {% if page < total_pages %}
+                        <a href="{{ url_for('home', page=page+1, q=query, category=current_category) }}">下一页 &raquo;</a>
+                    {% endif %}
+                </div>
+                {% endif %}
             {% else %}
                 <div class="no-items"><p>暂无符合条件的商品。</p></div>
             {% endif %}
@@ -201,6 +217,6 @@
         <p>&copy; 2025 闲置小铺. All rights reserved.</p>
         <p>{{ contact.address }} | {{ contact.phone }}</p>
     </footer>
-
 </body>
 </html>
+
